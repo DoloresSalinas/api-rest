@@ -4,6 +4,8 @@ Todas las modificaciones importantes en este proyecto se documentan en este arch
 
 ## [Unreleased]
 
+- Añadir nuevas funcionalidades y mejoras para próximas versiones
+
 ## [1.0.0] - 2025-06-06
 
 ### Añadido
@@ -12,9 +14,10 @@ Todas las modificaciones importantes en este proyecto se documentan en este arch
 - Endpoints para usuarios y tareas (CRUD)
 - Middleware para protección de rutas
 - Validaciones básicas
+- Documentación inicial (README.md)
 
 ### Corregido
-- Corrección de errores en la actualización parcial de tareas
+- Corrección de errores en la actualización parcial de tareas para evitar sobrescribir campos vacíos
 
 ### Mejorado
 - Documentación inicial y README.md
