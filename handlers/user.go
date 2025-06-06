@@ -58,9 +58,9 @@ func UpdateUser(c *fiber.Ctx) error {
 		return c.Status(400).SendString("ID inválido")
 	}
 
-	var user models.User
+	var user models.UserInput
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(400).SendString(err.Error())
+		return c.Status(400).JSON(fiber.Map{"error": "No se pudo parsear el body"})
 	}
 
 	updateFields := bson.M{}
@@ -86,10 +86,14 @@ func UpdateUser(c *fiber.Ctx) error {
 			})
 		}
 		updateFields["password"] = string(hash)	
-	} 
-	if !user.FechaNacimiento.IsZero() {
-		updateFields["fecha_nacimiento"] = user.FechaNacimiento
-	}
+	}  
+	if user.FechaNacimiento != "" {
+		fechaNacimiento, err := time.Parse("02/01/2006", user.FechaNacimiento)
+		if err != nil {
+			return c.Status(400).JSON(fiber.Map{"error": "Formato de Fecha de Nacimiento inválido"})
+		}
+		updateFields["fecha_nacimiento"] = fechaNacimiento
+	}	
 	if user.PreguntaSecreta != "" {
 		updateFields["pregunta_secreta"] = user.PreguntaSecreta
 	} 
@@ -107,8 +111,10 @@ func UpdateUser(c *fiber.Ctx) error {
 		return c.Status(500).SendString(err.Error())
 	}
 
-	user.ID = objID
-	return c.JSON(user)
+	return c.JSON(fiber.Map{
+		"message": "Usuario actualizado correctamente",
+		"id":      objID.Hex(),
+	})
 }
 
 func DeleteUser(c *fiber.Ctx) error {
